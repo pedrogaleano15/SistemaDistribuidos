@@ -7,7 +7,7 @@ import json
 import random
 
 # --- Tópicos ---
-BROKER_IP = "172.31.13.224"
+BROKER_IP = "172.31.9.221"
 BROKER_PORT = 50000
 TOPICO_POSICAO = "jogo/posicao"
 TOPICO_OBSTACULOS = "jogo/obstaculos"
