@@ -3,7 +3,7 @@ import socket
 import threading
 
 # Configuração do host e porta do servidor
-host = 'localhost'
+host = '192.168.22.12'
 port = 50000
 
 # Lista para armazenar os clientes conectados

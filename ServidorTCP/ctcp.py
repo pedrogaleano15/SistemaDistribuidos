@@ -1,24 +1,30 @@
-#Cliente TCP
+# Cliente TCP multi-serviço
 import socket
 import sys
 
-host ='localhost' #endereço do servido
-port = 50000     #porta onde o servidor está
-            #aguardando a conexão
-#Criando o socket IPV4 TCP
-c=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#Com o servidor criado vamos pedir uma conexão com o servidor
-c.connect((host,port))
-#Após conectar no servidor vamos enviar os dados
-msg=''
-while msg !='\x18':
-    msg=input()
-    msg2 = str.encode(msg)
-    #enviando os dados...
-    c.sendall(msg2)
-    #após enviar os dados aguardar a resposta
-    #do servidor. Se tudo ocorrer como esperado
-    #a mensagem será ecoada
-    data=c.recv(1024)
-    print('Mensagem ecoada: ',data.decode())
+host = '192.168.22.12'  # endereço do servidor
+port = 50000             # porta onde o servidor está
+
+# Criando o socket IPV4 TCP
+c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+c.connect((host, port))
+
+print('Conectado ao servidor! Comandos disponíveis: ECO, LISTA, HORA, SAIR')
+
+while True:
+    comando = input('\nDigite o comando (ECO, LISTA, HORA, SAIR): ').strip().upper()
+    c.sendall(comando.encode())
+    resposta = c.recv(1024).decode()
+    print('Servidor:', resposta)
+
+    if comando == 'ECO':
+        # Se o comando for ECO, o servidor pedirá a mensagem para ecoar
+        eco_msg = input('Digite a mensagem para ecoar: ')
+        c.sendall(eco_msg.encode())
+        resposta_eco = c.recv(1024).decode()
+        print('Servidor:', resposta_eco)
+    elif comando == 'SAIR':
+        print('Encerrando conexão com o servidor.')
+        break
+
 c.close()
