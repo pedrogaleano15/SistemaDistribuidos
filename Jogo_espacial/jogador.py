@@ -13,8 +13,8 @@ if len(sys.argv) < 2:
 JOGADOR_ID = sys.argv[1]
 
 # --- Configurações de Rede e Tópicos ---
-BROKER_IP = "172.31.9.221"
-BROKER_PORT = 50000
+BROKER_IP = "192.168.23.83"
+BROKER_PORT = 1883
 TOPICO_POSICAO = "jogo/posicao"
 TOPICO_EVENTOS = "jogo/eventos" 
 TOPICO_OBSTACULOS = "jogo/obstaculos"
@@ -55,15 +55,23 @@ rodando = True
 
 # --- Carregar Imagens ---
 try:
-    # Usando 'nave.jpg' para ser compatível com o arquivo enviado
-    nave_imagem = pygame.image.load('nave.png').convert_alpha() 
+    # *** ALTERAÇÃO: Carrega a mesma imagem de nave para todos ***
+    nave_imagem_unica = pygame.image.load('nave.png').convert_alpha() # Imagem padrão
+    
     fundo_imagem = pygame.image.load('fundo_espacial.jpg').convert()
     asteroide_imagem = pygame.image.load('asteroide.png').convert_alpha()
     tiro_surface = pygame.Surface((5, 15))
     tiro_surface.fill(BRANCO)
+    
+    # Redimensionamento
     fundo_imagem = pygame.transform.scale(fundo_imagem, (LARGURA_TELA, ALTURA_TELA))
-    nave_imagem = pygame.transform.scale(nave_imagem, (60, 50))
-    asteroide_imagem = pygame.transform.scale(asteroide_imagem, (50, 50))
+    tamanho_nave = (60, 50) # Definição de um tamanho padrão para as naves
+    
+    # *** ALTERAÇÃO: Redimensiona apenas a imagem única ***
+    nave_imagem = pygame.transform.smoothscale(nave_imagem_unica, tamanho_nave)
+    
+    asteroide_imagem = pygame.transform.smoothscale(asteroide_imagem, (50, 50))
+    
 except pygame.error as e:
     print(f"ERRO CRÍTICO: Não foi possível carregar uma imagem: {e}")
     sys.exit()
@@ -361,7 +369,7 @@ while rodando:
         if not JOGADOR_ELIMINADO: 
             tela.blit(nave_imagem, nave_rect)
             
-        # Desenha apenas os oponentes que estão vivos (True = VIVO)
+        # *** ALTERAÇÃO: Simplificado para desenhar sempre a mesma imagem de nave ***
         for id_oponente, pos in oponentes_pos.items():
             if OPONENTES_ELIMINADOS.get(id_oponente, True):
                 tela.blit(nave_imagem, nave_imagem.get_rect(center=(pos['x'], pos['y'])))

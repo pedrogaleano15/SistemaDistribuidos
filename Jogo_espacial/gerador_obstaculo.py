@@ -7,13 +7,13 @@ import random
 import sys
 
 # --- Configurações do Broker MQTT ---
-BROKER_IP = "172.31.9.221"
-BROKER_PORT = 50000
+BROKER_IP = "192.168.23.83"
+BROKER_PORT = 1883
 TOPICO_OBSTACULOS = "jogo/obstaculos"
 TOPICO_EVENTOS = "jogo/eventos" # Novo tópico para escutar o início/fim
 
 # --- Configurações do Jogo ---
-NUM_OBSTACULOS_POR_RODADA = 15
+NUM_OBSTACULOS_POR_RODADA = 5
 LARGURA_TELA = 800
 INTERVALO_GERACAO = 2
 JOGO_INICIADO = False # Estado para controlar a geração

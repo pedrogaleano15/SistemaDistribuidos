@@ -7,8 +7,8 @@ import json
 import random
 
 # --- Tópicos ---
-BROKER_IP = "172.31.9.221"
-BROKER_PORT = 50000
+BROKER_IP = "192.168.23.83"
+BROKER_PORT = 1883
 TOPICO_POSICAO = "jogo/posicao"
 TOPICO_OBSTACULOS = "jogo/obstaculos"
 TOPICO_TIROS = "jogo/tiros"
@@ -42,14 +42,22 @@ FONTE_TITULO = pygame.font.Font(None, 72)
 
 # --- Carregar Imagens ---
 try:
+    # *** ALTERAÇÃO: Carrega a mesma imagem de nave para todos ***
+    nave_imagem_unica = pygame.image.load('nave.png').convert_alpha() # Imagem padrão
+    
     fundo_imagem = pygame.image.load('fundo_espacial.jpg').convert()
-    nave_imagem = pygame.image.load('nave.png').convert_alpha()
     asteroide_imagem = pygame.image.load('asteroide.png').convert_alpha()
     tiro_surface = pygame.Surface((5, 15))
     tiro_surface.fill(BRANCO)
+    
+    # Redimensionamento
     fundo_imagem = pygame.transform.scale(fundo_imagem, (LARGURA_TELA, ALTURA_TELA))
-    nave_imagem = pygame.transform.scale(nave_imagem, (60, 50))
-    asteroide_imagem = pygame.transform.scale(asteroide_imagem, (50, 50))
+    tamanho_nave = (60, 50) # Definição de um tamanho padrão para as naves
+    
+    # *** ALTERAÇÃO: Redimensiona apenas a imagem única ***
+    nave_imagem = pygame.transform.smoothscale(nave_imagem_unica, tamanho_nave)
+    asteroide_imagem = pygame.transform.smoothscale(asteroide_imagem, (50, 50))
+    
 except pygame.error as e:
     print(f"ERRO CRÍTICO: Não foi possível carregar uma imagem: {e}")
     sys.exit()
@@ -150,9 +158,11 @@ while rodando:
             texto_placar = FONTE_MENU.render(f"{jogador_id}: {pontos} pontos", True, AMARELO)
             tela.blit(texto_placar, texto_placar.get_rect(center=(LARGURA_TELA/2, pos_y_placar))); pos_y_placar += 40
     else:
+        # *** ALTERAÇÃO: Simplificado para desenhar sempre a mesma imagem de nave ***
         for id_jogador, pos in jogadores_pos.items():
             if JOGADORES_VIVOS.get(id_jogador, True):
                 tela.blit(nave_imagem, nave_imagem.get_rect(center=(pos['x'], pos['y'])))
+                    
         for obs in obstaculos_ativos:
             tela.blit(asteroide_imagem, asteroide_imagem.get_rect(center=(obs['x'], obs['y'])))
         for id_tiro, tiro_data in tiros_ativos.items():
