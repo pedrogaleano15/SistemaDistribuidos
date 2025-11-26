@@ -14,13 +14,12 @@ public class ClienteChat extends UnicastRemoteObject implements IClient {
     private IServer servidorProxy;
     private ClienteChatV gui; 
 
-    // CONSTRUTOR CORRIGIDO: Deve ser public para ser acessado pela Visão/Controlador.
+    // Deve ser public para o Controller acessar
     public ClienteChat(String nomeUsuario) throws RemoteException {
         super();
         this.nomeUsuario = nomeUsuario;
     }
 
-    // Conecta a instância ao RMI Registry e registra-se no Servidor.
     public void conectar(String host, int porta) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(host, porta);
         servidorProxy = (IServer) registry.lookup("ChatServerService");
@@ -39,18 +38,14 @@ public class ClienteChat extends UnicastRemoteObject implements IClient {
                 UnicastRemoteObject.unexportObject(this, true); 
             }
         } catch (RemoteException e) {
-            // Ignorar
+            // Ignora erro na saída
         }
     }
 
-    // CALLBACK RMI: Chamado remotamente pelo Servidor.
     @Override
     public void receberMensagem(String mensagem) throws RemoteException {
         if (gui != null) {
-            // Usa Platform.runLater para garantir a atualização da GUI na thread correta.
-            Platform.runLater(() -> {
-                gui.mostrarMensagem(mensagem);
-            });
+            Platform.runLater(() -> gui.mostrarMensagem(mensagem));
         }
     }
     

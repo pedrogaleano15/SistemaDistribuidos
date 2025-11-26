@@ -14,12 +14,14 @@ import java.time.format.DateTimeFormatter;
 public class ServidorChat extends UnicastRemoteObject implements IServer {
     
     private Map<String, IClient> clientesAtivos;
+    private AuditService auditoria; // Serviço de auditoria
     private static final int PORTA_RMI = 1099;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     protected ServidorChat() throws RemoteException {
         super();
         this.clientesAtivos = new HashMap<>();
+        this.auditoria = new AuditService(); // Inicia o banco de dados
     }
 
     @Override
@@ -30,8 +32,6 @@ public class ServidorChat extends UnicastRemoteObject implements IServer {
         
         clientesAtivos.put(nome, cliente);
         System.out.println("Novo cliente conectado: " + nome);
-        
-        // Avisa a todos sobre a entrada do novo membro (Servidor é o remetente)
         enviarMensagem("Servidor", "*** " + nome + " se juntou ao chat! ***", null);
         return "OK";
     }
@@ -41,24 +41,24 @@ public class ServidorChat extends UnicastRemoteObject implements IServer {
         String dataHora = LocalTime.now().format(formatter);
         String msgFormatada = String.format("[%s] <%s>: %s", dataHora, remetente, mensagem);
 
+        // 1. Grava no Banco de Dados (Auditoria)
+        if (!remetente.equals("Servidor")) {
+            auditoria.registrarMensagem(remetente, destinatario, mensagem);
+        }
+
+        // 2. Lógica de Envio
         if (destinatario != null && !destinatario.isEmpty()) {
-            // Mensagem Privada
+            // Privado
             IClient clienteDestino = clientesAtivos.get(destinatario);
             if (clienteDestino != null) {
                 clienteDestino.receberMensagem("[PRIVADO] " + msgFormatada);
-                // Confirmação para o remetente
-                if (!remetente.equals("Servidor")) {
+                if (!remetente.equals("Servidor") && clientesAtivos.containsKey(remetente)) {
                     clientesAtivos.get(remetente).receberMensagem("[Você para " + destinatario + "] " + msgFormatada);
-                }
-            } else {
-                 if (!remetente.equals("Servidor")) {
-                    clientesAtivos.get(remetente).receberMensagem("*** Erro: Usuário " + destinatario + " não encontrado. ***");
                 }
             }
         } else {
-            // Broadcast para todos os clientes ativos
+            // Broadcast
             System.out.println("Broadcast: " + msgFormatada);
-            
             for (Map.Entry<String, IClient> entry : new HashMap<>(clientesAtivos).entrySet()) {
                 try {
                     entry.getValue().receberMensagem(msgFormatada);
@@ -86,13 +86,21 @@ public class ServidorChat extends UnicastRemoteObject implements IServer {
 
     public static void main(String[] args) {
         try {
+            // --- CONFIGURAÇÃO AUTOMÁTICA ---
+            // 1. Define o IP fixo da máquina servidora
+            System.setProperty("java.rmi.server.hostname", "192.168.100.7");
+
+            // 2. CRIA o Registry aqui mesmo (não precisa rodar rmiregistry separado)
             Registry registry = LocateRegistry.createRegistry(PORTA_RMI);
             
+            // 3. Cria e registra o servidor
             ServidorChat server = new ServidorChat();
             registry.rebind("ChatServerService", server);
 
             System.out.println("--- Servidor do Chat RMI Iniciado ---");
-            System.out.println("Aguardando conexões...");
+            System.out.println("Registry rodando na porta " + PORTA_RMI);
+            System.out.println("IP do Servidor: 192.168.100.7");
+            System.out.println("Banco de Dados: Ativo (SQLite)");
 
         } catch (Exception e) {
             System.err.println("Erro no servidor: " + e.toString());

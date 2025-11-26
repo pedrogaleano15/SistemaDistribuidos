@@ -1,64 +1,61 @@
-# 💬 Sistema de Chat Distribuído com Java RMI e JavaFX (MVC)
+# 💬 Sistema de Chat Distribuído com Java RMI, JavaFX e SQLite (MVC)
 
-Este projeto implementa um sistema de chat distribuído simples no modelo **Cliente/Servidor** utilizando **Java RMI (Remote Method Invocation)** para a comunicação e **JavaFX** para a interface gráfica, seguindo a arquitetura **MVC (Modelo, Controle, Visão)**.
+Este projeto implementa um sistema de chat distribuído completo utilizando **Java RMI** para comunicação em rede, **JavaFX** para a interface gráfica e **SQLite** para auditoria de mensagens. O projeto segue rigorosamente a arquitetura **MVC (Modelo, Controle, Visão)**.
 
-O servidor atua como um nó central, responsável pelo registro de clientes e pelo *broadcast* (distribuição) de mensagens.
+## 📋 Funcionalidades
 
----
-
-## 🛠️ Tecnologias Utilizadas
-
-* **Linguagem:** Java (JDK 25 ou superior)
-* **Comunicação Distribuída:** Java RMI (Remote Method Invocation)
-* **Interface Gráfica:** JavaFX (SDK 25.0.1 ou versão compatível com seu JDK)
-* **Arquitetura:** MVC (Modelo, Controle, Visão)
-* **Auditoria (Opcional):** SQLite JDBC (para persistência de mensagens)
+* **Arquitetura Cliente/Servidor:** Servidor centralizado com múltiplos clientes.
+* **RMI (Remote Method Invocation):** Comunicação transparente entre objetos distribuídos.
+* **Interface Gráfica (GUI):** Desenvolvida com JavaFX.
+* **Auditoria:** Todas as mensagens trocadas são salvas automaticamente em um banco de dados SQLite local (`chat_auditoria.db`).
+* **Mensagens Privadas:** Suporte para envio direto (`@usuario mensagem`).
+* **Broadcast:** Mensagens enviadas para todos os conectados.
 
 ---
 
-## 📁 Estrutura do Projeto (MVC)
+## 🛠️ Pré-requisitos e Configuração
 
-A lógica do sistema é rigidamente separada em três camadas dentro do pacote `chat`:
+Para executar este projeto, você precisará de:
 
-/src/chat ├── Controle/ # Camada de CONTROLE: Gerencia a lógica da aplicação e a interação entre Modelo e Visão. │ └── ChatController.java ├── Modelo/ # Camada de MODELO: Contém a lógica de negócio (RMI, IServer, IClient) e o estado do sistema. │ └── ClienteChat.java, ServidorChat.java, IServer.java, IClient.java └── visao/ # Camada de VISÃO: Lida com a apresentação dos dados (Interface JavaFX). └── ClienteChatV.java
+1.  **Java Development Kit (JDK) 25** (ou superior).
+2.  **JavaFX SDK 25.0.1** (Descompactado na raiz do projeto ou em local acessível).
+3.  **Driver SQLite JDBC:** O arquivo `.jar` já está incluído na pasta `lib/` deste repositório.
 
+### ⚠️ Configuração de Rede (Importante)
+
+O sistema foi configurado com um **IP Fixo** para o Servidor.
+* **IP do Servidor:** `seu ip`
+* Se você for rodar em outra rede, altere o IP nos arquivos `src/chat/Modelo/ServidorChat.java` e `src/chat/visao/ClienteChatV.java` e recompile.
 
 ---
 
-## 🚀 Como Compilar e Executar
+## 🚀 Como Compilar e Executar (Windows/PowerShell)
 
-A compilação e execução exigem a instalação do **Java Development Kit (JDK 25+)** e o **JavaFX SDK 25.0.1**.
+Certifique-se de estar na pasta raiz do projeto (`chat_RMI`).
 
-### 1. Configuração do Classpath (Para Auditoria)
+### 1. Compilação
 
-Se você incluiu o módulo de Auditoria com SQLite (próximo passo), o driver (`sqlite-jdbc-3.44.1.0.jar`) deve estar na pasta `lib/`.
+```powershell
+javac --module-path "javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.graphics -encoding UTF-8 -d bin src/chat/Modelo/*.java src/chat/Controle/*.java src/chat/visao/*.java
+2. Executar o Servidor (Máquina seu ip)
+O servidor inicia o Registry automaticamente e cria o banco de dados de auditoria.
 
-### 2. Compilação (Apenas para Recompilar)
+PowerShell
 
-O comando deve incluir o caminho do JavaFX SDK. Execute-o a partir da pasta `/chat_RMI`:
+java "-Djava.rmi.server.hostname=seu ip" -cp "bin;lib/*" chat.Modelo.ServidorChat
+3. Executar Clientes (Qualquer Máquina)
+Os clientes se conectam ao IP 192.168.100.7. Certifique-se de usar nomes de usuário diferentes para cada cliente.
 
-```bash
-# Compilação: Aponta para a pasta 'lib' do JavaFX SDK
-javac --module-path "[CAMINHO_DO_FX_SDK]\lib" --add-modules javafx.controls,javafx.fxml,javafx.graphics -encoding UTF-8 -d bin src/chat/Modelo/*.java src/chat/Controle/*.java src/chat/visao/*.java
-3. Execução (Três Terminais)
-Passo A: Iniciar o Servidor RMI (Terminal 1)
-O servidor inicia o RMI Registry.
+PowerShell
 
-Bash
-
-java -cp bin chat.Modelo.ServidorChat
-(Se usar o SQLite, o comando deve ser: java -cp "bin;lib/sqlite-jdbc-3.44.1.0.jar" chat.Modelo.ServidorChat)
-
-Passo B: Iniciar os Clientes (Terminal 2 e 3)
-Execute o comando do cliente, substituindo [CAMINHO_DO_FX_SDK] pelo caminho correto (ex: C:\Program Files\Java\javafx-sdk-25.0.1).
-
-Bash
-
-# Execução do Cliente: Aponta para os módulos JavaFX
-java --module-path "[CAMINHO_DO_FX_SDK]\lib" --add-modules javafx.controls,javafx.fxml,javafx.graphics -cp bin chat.visao.ClienteChatV
-💡 Funcionalidades do Chat
-Registro Único: O sistema impede que dois clientes usem o mesmo nome.
-
-Broadcast: Mensagens enviadas sem prefixo vão para todos os clientes conectados.
-
-Mensagem Privada: Use o formato @nome_usuario sua mensagem para envio privado.
+java --module-path "javafx-sdk-25.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.graphics -cp "bin;lib/*" chat.visao.ClienteChatV
+📁 Estrutura do Projeto
+/chat_RMI
+├── lib/                     # Dependências (Driver SQLite)
+├── javafx-sdk-25.0.1/       # SDK do JavaFX
+├── chat_auditoria.db        # Banco de dados (gerado automaticamente)
+├── src/chat/
+│   ├── Modelo/              # Lógica de Negócio, RMI e Banco de Dados
+│   ├── Controle/            # Controlador (Ponte entre View e Model)
+│   └── visao/               # Interface Gráfica
+└── bin/                     # Binários compilados
