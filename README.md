@@ -112,4 +112,4 @@ Cada subpasta contém o projeto independente. Consulte os comentários no códig
 
 **Pedro Henrique Morais Galeano**  
 Engenharia da Computação · UCDB · Campo Grande/MS  
-[GitHub](https://github.com/pedrogaleano15) · [LinkedIn](https://linkedin.com/in/SEU-PERFIL)
+[GitHub](https://github.com/pedrogaleano15) · [LinkedIn](www.linkedin.com/in/pedro-henrique-morais-galeano)
