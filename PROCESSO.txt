@@ -1,0 +1,67 @@
+PROCESSO DO PROJETO — SistemaDistribuidos
+=========================================================
+
+1. HISTÓRICO DE CRIAÇÃO
+------------------------
+Coleção de exercícios de Sistemas Distribuídos construída ao longo de vários
+meses (agosto a novembro de 2025): servidor/cliente TCP, jogo espacial
+distribuído com Mosquitto/Pygame, calculadora via RMI, chat via RMI/JavaFX
+com persistência SQLite, criptografia via RMI e um servidor com Pyro
+(Python). Passou por limpezas de cache do Git e ajustes de .gitignore ao
+longo do desenvolvimento, além de correções de README em 2026-04-12.
+
+2. REVISÃO DE 2026-08-06
+--------------------------
+Decisão sobre duplicidade CalculadorRMI vs CalculadoraRMI:
+- CalculadoraRMI (adicionado em 23/out) era um projeto antigo gerado pelo
+  NetBeans, com artefatos de build versionados (.class, .jar, nbproject/,
+  README.TXT autogerado), métodos em português (soma/subt/mult/divi) e SEM
+  tratamento de divisão por zero (retornava 0 silenciosamente).
+- CalculadorRMI (adicionado em 19/out, 4 dias antes) é uma reescrita limpa
+  em Maven do mesmo projeto: interface com nomes de método em inglês,
+  exceção real de divisão por zero, README próprio, sem artefatos de build
+  versionados.
+- Comparando os 4 arquivos-fonte, ficou confirmado que CalculadorRMI é uma
+  versão superior/melhorada, não um projeto divergente. CalculadoraRMI foi
+  removido do repositório.
+
+Outra remoção:
+- ServidorTCP/ continha apenas um README vazio (0 bytes), sem nenhum
+  código. O histórico do Git mostrava que já tinha sido apagado duas vezes
+  antes; o README raiz ainda anunciava um projeto de TCP em C++ que não
+  existia mais.
+
+Bugs reais encontrados e corrigidos:
+- requirements.txt de Exemplo_jogo, Jogo_espacial e servidor_com_pyro
+  estavam salvos em UTF-16 (com BOM), o que quebra "pip install -r
+  requirements.txt". Reescritos em UTF-8 puro.
+- O próprio .gitignore estava corrompido (texto UTF-8 seguido de um trecho
+  em UTF-16 para "/.vscode"). Reescrito limpo e ampliado para cobrir
+  target/, build/, dist/, bin/, *.class, *.db e o SDK do JavaFX vendorizado.
+- servidor_com_pyro/cliente.py: removido código morto (um Proxy(uri) criado
+  e imediatamente descartado antes do proxy real).
+- Jogo_espacial/jogador.py: removida uma continuação de linha "\" perdida
+  antes de uma linha em branco.
+
+Organização do repositório:
+- chat_RMI/javafx-sdk-25.0.1/ (~7MB de SDK vendorizado, incluindo um
+  src.zip de 6.9MB) e CriptoRMI/build/classes/*.class destravados do
+  controle de versão.
+- Corrigido nome de arquivo com extensão duplicada:
+  sqlite-jdbc-3.44.1.0.jar.jar -> .jar
+- Removidos comentários que pareciam sobra de conversa com assistente de
+  IA ("--- MODIFICAÇÃO IMPORTANTE AQUI ---" e similares) em CalculadorRMI
+  e Exemplo_jogo.
+- Corrigida inconsistência de nome: README.md e pom.xml de CalculadorRMI
+  ainda se referiam ao projeto internamente como "CalculadoraRMI".
+- Corrigido link do LinkedIn no README (faltava "https://").
+
+Documentação:
+- README.md raiz reescrito: adicionadas as entradas que faltavam para
+  chat_RMI e Exemplo_jogo (não documentados antes), removidas as seções de
+  ServidorTCP (apagado) e da CalculadoraRMI duplicada, corrigidos os
+  badges de tecnologia (não existe nenhum código em C++ no repositório,
+  apesar do que constava antes).
+
+Commit: b767554 — "Remove projetos duplicados/vazios e corrige bugs de
+encoding e comentários"
