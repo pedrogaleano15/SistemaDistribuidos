@@ -374,8 +374,8 @@ while rodando:
             if OPONENTES_ELIMINADOS.get(id_oponente, True):
                 tela.blit(nave_imagem, nave_imagem.get_rect(center=(pos['x'], pos['y'])))
             
-        for obs in obstaculos_ativos: tela.blit(asteroide_imagem, asteroide_imagem.get_rect(center=(obs['x'], obs['y'])))\
-        
+        for obs in obstaculos_ativos: tela.blit(asteroide_imagem, asteroide_imagem.get_rect(center=(obs['x'], obs['y'])))
+
         for id_tiro, pos_tiro in tiros_ativos.items(): tela.blit(tiro_surface, tiro_surface.get_rect(center=(int(pos_tiro['x']), int(pos_tiro['y']))))
 
 

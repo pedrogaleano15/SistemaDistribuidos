@@ -16,7 +16,7 @@ O sistema consiste em:
 
 ## Estrutura do Projeto (Maven)
 
-CalculadoraRMI/ ├── src/ │ ├── main/ │ │ └── java/ │ │ └── Calculadora/ │ │ ├── Calculadora.java # Interface Remota │ │ ├── Cliente.java # Aplicação Cliente │ │ ├── rmi.java # Implementação │ │ └── Servidor.java # Aplicação Servidor (inicia o Registry) ├── pom.xml # Configuração do Maven └── README.md # Este arquivo └── .gitignore # Arquivos ignorados pelo Git
+CalculadorRMI/ ├── src/ │ ├── main/ │ │ └── java/ │ │ └── Calculadora/ │ │ ├── Calculadora.java # Interface Remota │ │ ├── Cliente.java # Aplicação Cliente │ │ ├── rmi.java # Implementação │ │ └── Servidor.java # Aplicação Servidor (inicia o Registry) ├── pom.xml # Configuração do Maven └── README.md # Este arquivo └── .gitignore # Arquivos ignorados pelo Git
 
 
 ## Requisitos
@@ -26,14 +26,14 @@ CalculadoraRMI/ ├── src/ │ ├── main/ │ │ └── java/ │ �
 
 ## Compilação
 
-Navegue até a pasta `CalculadoraRMI` no terminal e execute o comando Maven para compilar o projeto:
+Navegue até a pasta `CalculadorRMI` no terminal e execute o comando Maven para compilar o projeto:
 
 ```bash
 mvn clean compile
 Isso criará os arquivos .class na pasta target/classes/.
 
 Execução (Apenas 2 Terminais)
-A execução requer dois terminais separados abertos na pasta CalculadoraRMI.
+A execução requer dois terminais separados abertos na pasta CalculadorRMI.
 
 ⚠️ IMPORTANTE (IP e Firewall):
 
@@ -60,7 +60,7 @@ Abra um novo terminal.
 
 Bash
 
-# Navegue até a pasta CalculadoraRMI
+# Navegue até a pasta CalculadorRMI
 cd caminho/para/SistemaDistribuidos/CalculadorRMI
 
 # Execute a classe Cliente

@@ -14,10 +14,8 @@ RAIO_JOGADOR = 25
 
 # Configs MQTT
 BROKER_HOST = "localhost"
-# ATENÇÃO: A porta padrão do MQTT é 1883. 
-# Você usou 50000, o que é incomum, mas vou manter.
-# Se não funcionar, tente mudar para 1883 (e verifique seu broker Mosquitto)
-BROKER_PORTA = 50000 
+# Porta não-padrão (o padrão do MQTT é 1883); ajuste conforme a config do broker Mosquitto
+BROKER_PORTA = 50000
 
 # --- Configuração do Jogador (Baseado no argumento de linha de comando) ---
 

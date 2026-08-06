@@ -6,11 +6,10 @@ import javax.swing.JOptionPane; // Para mostrar erros
 public class Cliente {
 
     public static void main(String[] args) {
-        
-        // --- MODIFICAÇÃO IMPORTANTE AQUI ---
-        // Use o mesmo IP que você definiu no Servidor.java
-        String ipServidor = "192.168.100.48"; 
-        
+
+        // Precisa ser o mesmo IP configurado em Servidor.java
+        String ipServidor = "192.168.100.48";
+
         try {
             // 1. Define o nome do serviço para procurar (com o IP correto)
             String nomeServico = "//" + ipServidor + "/Calculadora";
